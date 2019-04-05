@@ -2,15 +2,22 @@ const prompt = require('prompt');
 const args = process.argv.splice(process.execArgv.length + 2);
 const axios = require('axios');
 const url = require('url');
-
-const sessionURL = args[0];
-port = args[1] || 7000;
+const DEFAULT_PORT = 7000;
+let sessionURL = args[0];
+let port = args[1] || DEFAULT_PORT;
 
 async function start() {
   console.log('==================== Starting Questinator Connector ==================');
-  console.log(`Please, run your local server on port ${port}`);
 
   let loginObject;
+
+  if (!sessionURL) {
+    let result = await getSessionUrlAndPort();
+    sessionURL = result.sessionURL;
+    port = result.port || port;
+  }
+
+  console.log(`Please, run your local server on port ${port}`);
   const requestInfo = url.parse(sessionURL, true);
   const WSUrl = `${requestInfo.protocol}//${requestInfo.host}`;
 
@@ -97,6 +104,46 @@ async function getLogin() {
       return 1;
     }
     resolve({ login: result.Login });
+
+  });
+
+  return promise;
+}
+
+async function getSessionUrlAndPort() {
+  let resolve, reject;
+
+  let promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  const prompt_attributes = [
+    {
+      name: 'SessionURL',
+      warning: 'URL is not valid'
+    },
+    {
+      name: 'port',
+      warning: 'URL is not valid'
+    }
+  ];
+
+  console.log('Please, specify session url and local server port');
+  console.log(`Default port: ${DEFAULT_PORT}`);
+
+
+  prompt.start();
+
+  prompt.get(prompt_attributes, function (err, result) {
+    if (err) {
+      console.log(err);
+      return 1;
+    }
+    resolve({
+      sessionUrl : result.SessionURL,
+      port: result.port
+    });
 
   });
 
