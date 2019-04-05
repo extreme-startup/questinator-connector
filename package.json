@@ -1,7 +1,7 @@
 {
-  "name": "questinator-client",
-  "version": "0.0.4",
-  "description": "Node.js contender application example",
+  "name": "questinator-connector",
+  "version": "0.0.0",
+  "description": "Questinator connector",
   "main": "contender.js",
   "scripts": {
     "start": "concurrently --kill-others \"npm run tunnel \" \"npm run serve\"",
@@ -21,8 +21,5 @@
   },
   "preferGlobal": true,
   "author": "questinator",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/socket.io": "^2.1.2"
-  }
+  "license": "MIT"
 }
