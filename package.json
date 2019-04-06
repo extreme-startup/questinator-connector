@@ -9,7 +9,7 @@
     "publish:patch": "npm version patch --force --commit-hooks=false && npm publish",
     "publish:minor": "npm version minor --force --commit-hooks=false && npm publish",
     "publish:major": "npm version major --force --commit-hooks=false && npm publish",
-    "test": "node ./bin/questinator.js http://localhost:3000?ses=qwe 7002"
+    "test": "node ./bin/questinator.js"
   },
   "dependencies": {
     "axios": "0.18.0",

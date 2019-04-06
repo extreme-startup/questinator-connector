@@ -4,7 +4,21 @@ const axios = require('axios');
 const url = require('url');
 const DEFAULT_PORT = 7000;
 let sessionURL = args[0];
-let port = args[1] || DEFAULT_PORT;
+let answerServerUrl = getAnswerServerUrl();
+
+function getAnswerServerUrl() {
+  let test = new RegExp('^[0-9]*$');
+  console.log(args);
+  if(args[1] && test.test(args[1])) {
+    return `http://localhost:${args[1]}`;
+  }
+
+  if(args[1]) {
+      return args[1];
+  }
+
+  return `http://localhost:${DEFAULT_PORT}`
+}
 
 async function start() {
   console.log('==================== Starting Questinator Connector ==================');
@@ -14,10 +28,10 @@ async function start() {
   if (!sessionURL) {
     let result = await getSessionUrlAndPort();
     sessionURL = result.sessionURL;
-    port = result.port || port;
+    answerServerUrl = result.answerServerUrl || answerServerUrl;
   }
 
-  console.log(`Please, run your local server on port ${port}`);
+  console.log(`Please, run your local server on: ${answerServerUrl}`);
   const requestInfo = url.parse(sessionURL, true);
   const WSUrl = `${requestInfo.protocol}//${requestInfo.host}`;
 
@@ -63,7 +77,7 @@ async function start() {
     console.log(`Question: ${data}`);
 
     axios
-      .get(`http://localhost:${port}?question=${data}`)
+      .get(`${answerServerUrl}?question=${data}`)
       .then(({ data: answer }) => {
         console.log(`Sending answer: ${answer}`);
         socket.emit('answer', {
@@ -73,7 +87,7 @@ async function start() {
         })
       })
       .catch(() => {
-        console.error(`Could not get answer from your local server: http://localhost:${port}?question=${data}`);
+        console.error(`Could not get answer from your local server: ${answerServerUrl}?question=${data}`);
         socket.emit('answer', {
           success: false,
           login: loginObject.login
@@ -126,13 +140,13 @@ async function getSessionUrlAndPort() {
       warning: 'URL is not valid'
     },
     {
-      name: 'port',
+      name: 'AnswerServerUrl',
       warning: 'URL is not valid'
     }
   ];
 
-  console.log('Please, specify session url and local server port');
-  console.log(`Default port: ${DEFAULT_PORT}`);
+  console.log('Please, specify session url and local server url');
+  console.log(`Default answer server URL: ${answerServerUrl}`);
 
 
   prompt.start();
@@ -143,8 +157,8 @@ async function getSessionUrlAndPort() {
       return 1;
     }
     resolve({
-      sessionUrl : result.SessionURL,
-      port: result.port
+        sessionURL : result.SessionURL,
+      answerServerUrl: result.AnswerServerUrl
     });
 
   });
