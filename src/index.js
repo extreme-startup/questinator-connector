@@ -40,7 +40,9 @@ async function start() {
     clearTimeout(connectionTimeout);
     console.info(`Connecting to remote server: ${sessionURL}`);
 
-    loginObject = await getLogin();
+    if(!loginObject) {
+        loginObject = await getLogin();
+    }
 
     socket.emit('join', {
       login: loginObject.login,
