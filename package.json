@@ -4,7 +4,7 @@
   "description": "Questinator connector",
   "main": "contender.js",
   "scripts": {
-    "start": "concurrently --kill-others \"npm run tunnel \" \"npm run serve\"",
+    "start": "node ./bin/questinator.js",
     "publish:pre": "npm version prerelease --force --commit-hooks=false && npm publish",
     "publish:patch": "npm version patch --force --commit-hooks=false && npm publish",
     "publish:minor": "npm version minor --force --commit-hooks=false && npm publish",
