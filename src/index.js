@@ -74,22 +74,26 @@ async function start() {
   }
 
   function onQuestion(data) {
-    console.log(`Question: ${data}`);
+    const question = data.question;
+    const hash = data.hash;
+    console.log(`Question: ${JSON.stringify(question)}`);
 
     axios
-      .get(`${answerServerUrl}?question=${data}`)
+      .get(`${answerServerUrl}?question=${question}`)
       .then(({ data: answer }) => {
         console.log(`Sending answer: ${answer}`);
         socket.emit('answer', {
           answer,
+          hash,
           success: true,
           login: loginObject.login
         })
       })
       .catch(() => {
-        console.error(`Could not get answer from your local server: ${answerServerUrl}?question=${data}`);
+        console.error(`Could not get answer from your local server: ${answerServerUrl}?question=${question}`);
         socket.emit('answer', {
           success: false,
+          hash,
           login: loginObject.login
         })
       });
