@@ -1,6 +1,6 @@
 {
   "name": "questinator-connector",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Questinator connector",
   "main": "contender.js",
   "scripts": {
